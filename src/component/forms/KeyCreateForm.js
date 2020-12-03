@@ -1,71 +1,43 @@
-// Copyright (c) 2020 Wang Zemin Personal. All Right Reserved
-
 import * as React from "react";
 import {createAdminUser, disableUser, fetchAllUser} from "../../requests/UserManageRequest";
-import {Button, Card, Col, Input, notification, Row, Select, Table, Tag} from "antd";
+import {Button, Card, Col, Input, InputNumber, notification, Row, Select, Table, Tag} from "antd";
 import {Option} from "antd/es/mentions";
+import {createKey} from "../../requests/KeyManageRequest";
 
-class UserCreateForm extends React.Component {
+class KeyCreateForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            userName: "",
-            role: "admin"
+            keyEffectiveDay: 10,
         };
     }
 
-    handleRoleChange = (role) => {
+    keyEffectiveDayChange = (day) => {
         this.setState({
-            role: role
-        })
-    }
-
-    userNameChange = (e) => {
-        this.setState({
-            userName: e.target.value
+            keyEffectiveDay: day
         })
     }
 
 
-    passwordChange = (e) => {
-        this.setState({
-            password: e.target.value
+    createKey = () => {
+        createKey(this.state.keyEffectiveDay).then(edpKey => {
+            notification.info({message: "创建激活码成功", description: "创建激活码" + edpKey.result.keyName + "成功"});
         })
-    }
-
-
-    createUser = () => {
-        if (this.state.role === 'admin') {
-            createAdminUser(this.state.userName,this.state.password).then(edpUser=>{
-                notification.info({message: "创建用户成功", description: "创建用户" + edpUser.result.userName + "成功"});
-            })
-        }
-
     }
 
     render = () => {
         return (
             <div>
-                <Card title="创建新用户：" style={{padding: 20, margin: 20}}>
-                    <Row >
+                <Card title="创建新激活码：" style={{padding: 20, margin: 20}}>
+                    <Row>
                         <Col span={4} offset={1}>
-                            <Input placeholder="用户名" value={this.state.userName} onChange={(event) => {
-                                this.userNameChange(event)
-                            }}/>
-                        </Col>
-                        <Col span={4}>
-                            <Input placeholder="密码" value={this.state.password} onChange={(event) => {
-                                this.passwordChange(event)
-                            }}/>
-                        </Col>
-                        <Col span={4} offset={1}>
-                            <Select defaultValue="admin" style={{width: 200}} onChange={this.handleRoleChange}>
-                                <Select.Option value="admin">身份：管理员</Select.Option>
-                                <Select.Option value="agent">身份：代理商</Select.Option>
-                            </Select>
+                            <span>有效期</span>
+                            <InputNumber min={1} max={1000000} defaultValue={10} value={this.state.keyEffectiveDay}
+                                         onChange={(event) => {this.keyEffectiveDayChange(event)}}/>
+                            <span>天</span>
                         </Col>
                         <Col span={4} offset={2}>
-                            <Button type="primary" onClick={this.createUser}>确认创建用户</Button>
+                            <Button type="primary" onClick={this.createKey}>确认创建激活码</Button>
                         </Col>
                     </Row>
                 </Card>
@@ -76,4 +48,4 @@ class UserCreateForm extends React.Component {
 
 }
 
-export default UserCreateForm
+export default KeyCreateForm

@@ -1,90 +1,128 @@
 // Copyright (c) 2020 Wang Zemin Personal. All Right Reserved
-export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://49.234.76.148";
-export const ACCESS_TOKEN = "accessToken";
 
-/* Add auth information such as jwt token to the header */
-function addAuthorToHeader(headers) {
-    if (localStorage.getItem(ACCESS_TOKEN)) {
-        headers.append('Authorization', localStorage.getItem(ACCESS_TOKEN))
+import * as React from "react";
+import {disableUser, fetchAllUser} from "../../requests/UserManageRequest";
+import {Button, notification, Table, Tag} from "antd";
+
+class UserListTable extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            users: [],
+            pagination: {current: 1, pageSize: 10}
+        };
     }
-    return headers
-}
 
-/* Add json format information to the header */
-function addJsonContentTypeToHeader(headers) {
-    headers.append('Content-Type', 'application/json')
-    return headers
-}
-
-/* Add json format information to the header */
-function createDefaultHeader() {
-    let headers = new Headers({})
-    headers = addAuthorToHeader(headers)
-    headers = addJsonContentTypeToHeader(headers)
-    return headers
-}
-
-/* Create an post method options */
-function createPostOption(data) {
-    const option = {headers: createDefaultHeader()}
-    option.body = data
-    option.method = "POST"
-    return option
-}
-
-/* Create an get method options */
-function createGetOption(data) {
-    const option = {headers: createDefaultHeader()}
-    option.method = "GET"
-    return option
-}
-
-/* Concat the request real url */
-function concatRequestUrl(relativeUrl) {
-    return API_BASE_URL + relativeUrl
-}
-
-/* To concat a get request url with params dict. */
-function concatGetUrl(relativeUrl, data) {
-    let url = concatRequestUrl(relativeUrl)
-    let prefix = "?"
-    Object.keys(data).forEach(function (key) {
-        url = url + prefix + key + "=" + data[key]
-        prefix = "&"
-    })
-    return url
-}
-
-/* Fetch data by http post request */
-export function doPostRequest(relativeUrl, data) {
-    const url = concatRequestUrl(relativeUrl)
-    const option = createPostOption(data)
-    return fetch(url, option)
-        .then(response =>
-            response.json().then(json => {
-               return json
-            })
-        );
-}
-
-/* Fetch data by http get request */
-export function doGetRequest(relativeUrl, data) {
-    const url = concatGetUrl(relativeUrl, data)
-    const option = createGetOption(data)
-    console.log("Begin to post " + url + " with options:" + JSON.stringify(option))
-    return fetch(url, option)
-        .then(response =>
-            response.json().then(json => {
-                return json
-            })
-        );
-}
-
-/* Convert frontend pagination to backend page request */
-export function paginationToBackend(pagination) {
-    return {
-        pageNo: pagination.current,
-        pageSize: pagination.pageSize
+    componentDidMount = () => {
+        this.refreshUserData()
     }
+
+    clickDisableUser = (e, userName) => {
+        console.log("userName:" + JSON.stringify(userName))
+        disableUser(userName).then((edpUser) => {
+            this.refreshUserData()
+            notification.info({message: "禁用用户成功", description: "禁用用户" + edpUser.result.userName + "成功"});
+        })
+        console.log('params', userName);
+    }
+
+
+    onTableChange = (pagination) => {
+        this.setState({pagination: pagination}, this.refreshUserData);
+    }
+
+
+    refreshUserData = () => {
+        fetchAllUser(this.state.pagination)
+            .then((userDomains) => {
+                let fetchUsers = userDomains.result.map((userDomain) => this.toTableElement(userDomain))
+                this.setState({
+                    users: fetchUsers, pagination: {
+                        current: userDomains.pageNo,
+                        pageSize: userDomains.pageSize,
+                        total: userDomains.total
+                    }
+                })
+
+            })
+    }
+
+
+    toTableElement = (userDomain) => {
+        let roles = userDomain.roles.map(role => role.displayName)
+        let permissions = userDomain.permissions.map(permission => permission.displayName)
+        return {
+            "userName": userDomain.userName,
+            "createTime": userDomain.createTime,
+            "createBy": userDomain.createBy,
+            "status": userDomain.status,
+            "roles": roles,
+            "permissions": permissions
+        }
+    }
+
+    render = () => {
+        let pagination = this.state.pagination
+        const userColumns = [
+            {
+                title: '用户名',
+                dataIndex: 'userName',
+                key: 'userName',
+            },
+            {
+                title: '创建时间',
+                dataIndex: 'createTime',
+                key: 'createTime',
+            },
+            {
+                title: '创建人',
+                dataIndex: 'createBy',
+                key: 'createBy',
+            },
+            {
+                title: '用户角色',
+                dataIndex: 'roles',
+                key: 'roles',
+                render: tags => (
+                    <div>
+                        {tags.map(tag => {
+                            return (
+                                <Tag color='geekblue' key={tag}>
+                                    {tag.toUpperCase()}
+                                </Tag>
+                            );
+                        })}
+                    </div>
+                ),
+            },
+            {
+                title: '用户状态',
+                dataIndex: 'status',
+                key: 'status',
+            },
+            {
+                title: '禁用用户',
+                dataIndex: 'action',
+                key: 'action',
+                render: (text, record, index) => (
+                    <Button type="dashed" danger disabled={record.status !== "NORMAL"} key={record.userName}
+                            onClick={e => this.clickDisableUser(e, record.userName)}>禁用用户</Button>
+                ),
+            }
+        ]
+        return (
+            <div style={{padding: 10, margin: 10}}>
+                <Table
+                    columns={userColumns}
+                    dataSource={this.state.users}
+                    rowKey={(record) => record.userName}
+                    onChange={this.onTableChange}
+                    pagination={pagination}
+                />
+            </div>
+        );
+    }
+
 }
 
+export default UserListTable

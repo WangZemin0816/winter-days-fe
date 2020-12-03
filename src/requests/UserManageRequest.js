@@ -1,35 +1,30 @@
 // Copyright (c) 2020 Wang Zemin Personal. All Right Reserved
 
-import {doGetRequest} from "./BaseRequest";
+import {doPostRequest} from "./BaseRequest";
+import {paginationToBackend} from "./BaseRequest";
 
-/* Convert frontend pagination to backend page request */
-function paginationToBackend(pagination) {
-    return {
-        pageNo: pagination.current - 1,
-        pageSize: pagination.pageSize
-    }
-}
-
-/* Find all sheet in serve pageable */
-export function fetchAllWorkbook(pagination, callback) {
+/* Find all user in server pageable */
+export function fetchAllUser(pagination) {
     const data = paginationToBackend(pagination)
-    return doGetRequest("/excel/get/workbooks", data, callback)
+    return doPostRequest("/user/manage/query/user", data)
 }
 
-/* Find all sheet in a workbook pageable */
-export function fetchSheetInWorkbook(workbookUuid, pagination) {
-    let data = paginationToBackend(pagination)
-    data.workbookUuid = workbookUuid;
-    const json = doGetRequest("/excel/get/sheets", data)
-    console.log("Fetch sheet for workbook[" + workbookUuid + "] from server success, fetch result:" + json)
-    return json
+
+/* Create an admin user */
+export function createAdminUser(username, password) {
+    const data = {"username": username, "password": password}
+    return doPostRequest("/user/manage/create/admin", data)
 }
 
-/* Add json format information to the header */
-export function fetchHeaderInSheet(sheetUuid, pagination) {
-    let data = paginationToBackend(pagination)
-    data.sheetUuid = sheetUuid;
-    const json = doGetRequest("/excel/get/headers", data)
-    console.log("Fetch header for sheet[" + sheetUuid + "]  server success, fetch result:" + json)
-    return json
+/* Create an agent user */
+export function createAgentUser(username, password) {
+    const data = {"username": username, "password": password}
+    return doPostRequest("/user/manage/create/agent", data)
+}
+
+/* Disable an user */
+export function disableUser(username) {
+    console.log("Disable user with name:" + username)
+    const data = {"username": username}
+    return doPostRequest("/user/manage/disable/user", data)
 }

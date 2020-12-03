@@ -1,5 +1,7 @@
 // Copyright (c) 2020 Wang Zemin Personal. All Right Reserved
-export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:8002";
+import {notification} from "antd";
+
+export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:8080";
 export const ACCESS_TOKEN = "accessToken";
 
 /* Add auth information such as jwt token to the header */
@@ -17,10 +19,17 @@ function addJsonContentTypeToHeader(headers) {
 }
 
 /* Add json format information to the header */
+function addCrossPolicyToHeader(headers) {
+    headers.append('Referrer-Policy', 'unsafe-url')
+    return headers
+}
+
+/* Add json format information to the header */
 function createDefaultHeader() {
     let headers = new Headers({})
     headers = addAuthorToHeader(headers)
     headers = addJsonContentTypeToHeader(headers)
+    headers = addCrossPolicyToHeader(headers)
     return headers
 }
 
@@ -58,13 +67,27 @@ function concatGetUrl(relativeUrl, data) {
 /* Fetch data by http post request */
 export function doPostRequest(relativeUrl, data) {
     const url = concatRequestUrl(relativeUrl)
-    const option = createPostOption(data)
-    return fetch(url, option)
-        .then(response =>
-            response.json().then(json => {
-               return json
-            })
-        );
+    const option = createPostOption(JSON.stringify(data))
+    return new Promise(function (resolve, reject) {
+        fetch(url, option).then(response => {
+            if (response.status < 400) {
+                return response.json()
+            } else if (response.status === 401) {
+                notification.error({message: "用户需要登录", description: "用户未登录或者登录已经过期."});
+                window.location.href="/login";
+            } else {
+                response.json().then(json => {
+                    console.log(JSON.stringify(json))
+                    notification.error({message: json.error, description: json.message});
+                })
+            }
+            reject({status: response.status})
+        }).then((response) => {
+            resolve(response);
+        }).catch((err) => {
+            reject({status: -1});
+        });
+    })
 }
 
 /* Fetch data by http get request */
@@ -78,5 +101,13 @@ export function doGetRequest(relativeUrl, data) {
                 return json
             })
         );
+}
+
+/* Convert frontend pagination to backend page request */
+export function paginationToBackend(pagination) {
+    return {
+        pageNo: pagination.current,
+        pageSize: pagination.pageSize
+    }
 }
 

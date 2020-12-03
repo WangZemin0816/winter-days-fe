@@ -5,19 +5,23 @@ import {UserOutlined, LockOutlined, LoginOutlined} from "@ant-design/icons";
 import Owl from "./Owl";
 import "./login-box.css"
 import "antd/dist/antd.css";
-import {postRequest} from "../common/Request"
-import {ACCESS_TOKEN} from "../common/Constants";
+import {ACCESS_TOKEN, doPostRequest} from "../requests/BaseRequest";
+
 
 class LoginBox extends Component {
 
+    constructor(props) {
+        super(props);
+    }
     loginSubmit = (form) => {
-        postRequest("/console/fe/auth/login", JSON.stringify(form))
+        doPostRequest("/auth/login", form)
             .then(response => {
-                localStorage.setItem(ACCESS_TOKEN, response.result.accessToken);
-                notification.success({message: "用户登录成功", description: "页面即将跳转."})
-            })
-            .catch(error => {
-                notification.error({message: error.error, description: error.message});
+                console.log("Cur response user info:"+JSON.stringify(response))
+                if (response && response.result) {
+                    localStorage.setItem(ACCESS_TOKEN, response.result.accessToken);
+                    notification.success({message: "用户登录成功", description: "页面即将跳转."})
+                    window.location.href="/";
+                }
             });
     }
 

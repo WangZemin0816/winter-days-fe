@@ -23,15 +23,15 @@ class SiderNav extends React.Component {
                     <div className="logo-text"/>
                 </div>
                 <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-                    <Menu.Item key="file-manage" icon={<FileOutlined/>}>
-                        <NavLink to="/index/summary"><span>文件管理-不可用</span></NavLink>
+                    <Menu.Item key="user-manage" icon={<FileOutlined/>}>
+                        <NavLink to="/index/user/admin"><span>用户管理模块</span></NavLink>
                     </Menu.Item>
-                    <SubMenu key="audit-tools" icon={<FileOutlined/>} title="审计工具">
-                        <Menu.Item key="evaluate-summery" icon={<PieChartOutlined/>}>
-                            <NavLink to="/index/summary"><span>求和为某个数的值</span></NavLink>
+                    <SubMenu key="key-manage" icon={<FileOutlined/>} title="激活码管理">
+                        <Menu.Item key="key-manage-own" icon={<PieChartOutlined/>}>
+                            <NavLink to="/index/key/agent"><span>管理自己的激活码</span></NavLink>
                         </Menu.Item>
-                        <Menu.Item key="extract-key-value" icon={<PieChartOutlined/>}>
-                            <NavLink to="/index/extract"><span>提取关键字后边的值</span></NavLink>
+                        <Menu.Item key="key-manage-all" icon={<PieChartOutlined/>}>
+                            <NavLink to="/index/key/admin"><span>管理所有的激活码</span></NavLink>
                         </Menu.Item>
                     </SubMenu>
                 </Menu>
