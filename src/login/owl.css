@@ -1,0 +1,71 @@
+.owl{
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap:wrap;
+    width: 291px;
+    height: 0;
+    top: -110px;
+    margin-bottom: 110px;
+}
+
+#owl .head{
+    z-index: 5;
+    position: relative;
+    bottom: -8px;
+    width: 211px;
+    height: 108px;
+    background-repeat: no-repeat;
+    background-image: url("./img/owl-login.png");
+}
+
+#owl .hand{
+    z-index: 10;
+    width: 34px;
+    height: 34px;
+    border-radius: 40px;
+    background-color: #472d20;
+    transition: .3s ease-out;
+    transform: scaleY(0.6);
+}
+
+#owl .left-hand{
+    position: relative;
+    top: 54px;
+    left: 50px;
+}
+
+#owl .right-hand{
+    position: relative;
+    top: 54px;
+    left: -47px;
+}
+
+#owl .arms-box{
+    position: relative;
+    top: -41px;
+    height: 41px;
+    width: 100%;
+    overflow: hidden;
+}
+
+#owl .arms-box .arm{
+    z-index: 20;
+    position: absolute;
+    bottom: -67px;
+    width: 40px;
+    height: 65px;
+    transition: 0.3s ease-out;
+    background-image: url("./img/owl-login-arm.png");
+}
+
+#owl .arms-box .left-arm{
+    left: 57px;
+    transform: rotate(-20deg);
+}
+
+#owl .arms-box .right-arm{
+    left: 198px;
+    transform: rotate(20deg) scaleX(-1);
+}

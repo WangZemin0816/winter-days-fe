@@ -1,0 +1,17 @@
+/* Copyright (c) 2020 Wang Zemin Personal. All Right Reserved */
+.sider-nav{
+    height: 100vh;
+}
+
+#sider-nav .logo{
+    width: 100%;
+    height: 70px;
+    padding: 10px;
+}
+
+#sider-nav .logo .logo-text{
+    width: 100%;
+    height: 100%;
+    background-image: url("img/w-xinxin-pink.png");
+    background-size: 100% 100%;
+}

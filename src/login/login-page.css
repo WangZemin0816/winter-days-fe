@@ -1,0 +1,11 @@
+.login-page{
+    position:absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1920px;
+    height: 1080px;
+    top: -15%;
+    background-image: url("./img/snow.jpg");
+    background-repeat: repeat-y;
+}
