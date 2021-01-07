@@ -15,8 +15,8 @@ export function fetchAllOwnKey(pagination) {
 }
 
 /* Create a key with effective days */
-export function createKey(days) {
-    const data = {"effectiveDurationInDay": days}
+export function createKey(days,totalTimes) {
+    const data = {"effectiveDurationInDay": days,"totalTimes":totalTimes}
     return doPostRequest("/key/manage/create", data)
 }
 

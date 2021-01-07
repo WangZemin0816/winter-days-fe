@@ -9,6 +9,7 @@ class KeyCreateForm extends React.Component {
         super(props);
         this.state = {
             keyEffectiveDay: 10,
+            keyTotalTimes:100,
         };
     }
 
@@ -18,9 +19,14 @@ class KeyCreateForm extends React.Component {
         })
     }
 
+    keyTotalTimesChange = (times) => {
+        this.setState({
+            keyTotalTimes: times
+        })
+    }
 
     createKey = () => {
-        createKey(this.state.keyEffectiveDay).then(edpKey => {
+        createKey(this.state.keyEffectiveDay,this.state.keyTotalTimes).then(edpKey => {
             notification.info({message: "创建激活码成功", description: "创建激活码" + edpKey.result.keyName + "成功"});
         })
     }
@@ -35,6 +41,12 @@ class KeyCreateForm extends React.Component {
                             <InputNumber min={1} max={1000000} defaultValue={10} value={this.state.keyEffectiveDay}
                                          onChange={(event) => {this.keyEffectiveDayChange(event)}}/>
                             <span>天</span>
+                        </Col>
+                        <Col span={4} offset={1}>
+                            <span>可用激活次数</span>
+                            <InputNumber min={1} max={1000000} defaultValue={100} value={this.state.keyTotalTimes}
+                                         onChange={(event) => {this.keyTotalTimesChange(event)}}/>
+                            <span>次</span>
                         </Col>
                         <Col span={4} offset={2}>
                             <Button type="primary" onClick={this.createKey}>确认创建激活码</Button>
