@@ -43,7 +43,7 @@ class KeyCreateForm extends React.Component {
                             <span>天</span>
                         </Col>
                         <Col span={4} offset={1}>
-                            <span>可用激活次数</span>
+                            <span>可用预测次数</span>
                             <InputNumber min={1} max={1000000} defaultValue={100} value={this.state.keyTotalTimes}
                                          onChange={(event) => {this.keyTotalTimesChange(event)}}/>
                             <span>次</span>
