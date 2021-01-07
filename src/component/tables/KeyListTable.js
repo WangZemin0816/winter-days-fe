@@ -77,6 +77,7 @@ class KeyListTable extends React.Component {
             "deviceInfo": keyDomain.deviceInfo,
             "effectiveTime": keyDomain.effectiveTime,
             "expireTime": keyDomain.expireTime,
+            "remainTimes": keyDomain.remainTimes,
             "status": keyDomain.status
         }
     }
@@ -113,6 +114,11 @@ class KeyListTable extends React.Component {
                 title: '过期时间',
                 dataIndex: 'expireTime',
                 key: 'expireTime',
+            },
+            {
+                title: '可用次数',
+                dataIndex: 'remainTimes',
+                key: 'remainTimes',
             },
             {
                 title: '状态',
