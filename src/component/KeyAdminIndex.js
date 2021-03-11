@@ -3,12 +3,14 @@
 import * as React from "react";
 import KeyCreateForm from "./forms/KeyCreateForm";
 import KeyListTable from "./tables/KeyListTable";
+import KeyIncCountForm from "./forms/KeyIncCountForm";
 
 class KeyAdminIndex extends React.Component {
     render = () => {
         return (
             <div>
                 <KeyCreateForm role='admin'/>
+                <KeyIncCountForm role='admin'/>
                 <KeyListTable role='admin'/>
             </div>
         );

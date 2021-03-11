@@ -1,6 +1,7 @@
 // Copyright (c) 2020 Wang Zemin Personal. All Right Reserved
 import {notification} from "antd";
 
+// export const API_BASE_URL = ""
 export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:8080";
 export const ACCESS_TOKEN = "accessToken";
 

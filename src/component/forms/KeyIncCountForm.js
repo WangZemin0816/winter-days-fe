@@ -1,55 +1,60 @@
 import * as React from "react";
-import {createAdminUser, disableUser, fetchAllUser} from "../../requests/UserManageRequest";
-import {Button, Card, Col, Input, InputNumber, notification, Row, Select, Table, Tag} from "antd";
-import {Option} from "antd/es/mentions";
-import {createKey} from "../../requests/KeyManageRequest";
+
+import {Button, Card, Col, Input, InputNumber, notification, Row} from "antd";
+
+import {increaseKey, increaseOwnKey} from "../../requests/KeyManageRequest";
 
 class KeyIncCountForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            incCount: 10,
-            keyTotalTimes:100,
+            incCount: 1000,
+            incKeyName:"",
         };
     }
 
-    keyIncCountChange = (day) => {
+    keyIncCountChange = (event) => {
         this.setState({
-            keyEffectiveDay: day
+            incCount: event
         })
     }
 
-    keyTotalTimesChange = (times) => {
+    keyIncKeyNameChange = (event) => {
         this.setState({
-            keyTotalTimes: times
+            incKeyName: event.target.value
         })
     }
 
-    createKey = () => {
-        createKey(this.state.keyEffectiveDay,this.state.keyTotalTimes).then(edpKey => {
-            notification.info({message: "创建激活码成功", description: "创建激活码" + edpKey.result.keyName + "成功"});
-        })
+    incKeyCount = () => {
+        if (this.props.role === 'admin'){
+            increaseKey(this.state.incKeyName,this.state.incCount).then(edpKey => {
+                notification.info({message: "为激活码增加竹子数成功", description: "当前激活码可用竹子数" + edpKey.result.remainTimes});
+            })
+        }else{
+            increaseOwnKey(this.state.incKeyName,this.state.incCount).then(edpKey => {
+                notification.info({message: "为激活码增加竹子数成功", description: "当前激活码可用竹子数" + edpKey.result.remainTimes});
+            })
+        }
+
     }
 
     render = () => {
         return (
             <div>
-                <Card title="增加激活码可用次数(负数为减少)：" style={{padding: 20, margin: 20}}>
+                <Card title="增加激活码可用竹子数(负数为减少)：" style={{padding: 20, margin: 20}}>
                     <Row>
                         <Col span={4} offset={1}>
-                            <span>增加的次数（负数为减少）</span>
+                            <Input placeholder="激活码编号(注意删除空格)"  value={this.state.incKeyName} onChange={this.keyIncKeyNameChange}/>
+                        </Col>
+                        <Col span={6} offset={1}>
+                            <span>增加的可用竹子数目（负数为减少）</span>
                             <InputNumber min={-10000000} max={10000000} defaultValue={1000} value={this.state.incCount}
                                          onChange={(event) => {this.keyIncCountChange(event)}}/>
-                            <span>天</span>
-                        </Col>
-                        <Col span={4} offset={1}>
-                            <span>可用预测次数</span>
-                            <InputNumber min={1} max={1000000} defaultValue={100} value={this.state.keyTotalTimes}
-                                         onChange={(event) => {this.keyTotalTimesChange(event)}}/>
                             <span>次</span>
                         </Col>
+
                         <Col span={4} offset={2}>
-                            <Button type="primary" onClick={this.createKey}>确认创建激活码</Button>
+                            <Button type="primary" onClick={this.incKeyCount}>确认修改竹子数</Button>
                         </Col>
                     </Row>
                 </Card>
@@ -60,4 +65,4 @@ class KeyIncCountForm extends React.Component {
 
 }
 
-export default KeyIncCountForm
+export default KeyIncCountForm;

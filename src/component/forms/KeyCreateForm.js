@@ -20,6 +20,7 @@ class KeyCreateForm extends React.Component {
     }
 
     keyTotalTimesChange = (times) => {
+
         this.setState({
             keyTotalTimes: times
         })

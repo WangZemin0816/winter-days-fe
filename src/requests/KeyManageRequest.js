@@ -31,3 +31,15 @@ export function disableOwnKey(keyName) {
     const data = {"keyName": keyName}
     return doPostRequest("/key/manage/disable/own", data)
 }
+
+/* Disable a key */
+export function increaseKey(keyName, incCount) {
+    const data = {"keyName": keyName,"incCount":incCount}
+    return doPostRequest("/key/manage/increase", data)
+}
+
+/* Disable own key */
+export function increaseOwnKey(keyName, incCount) {
+    const data = {"keyName": keyName,"incCount":incCount}
+    return doPostRequest("/key/manage/increase/own", data)
+}
