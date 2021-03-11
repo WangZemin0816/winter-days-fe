@@ -41,12 +41,12 @@ class KeyIncCountForm extends React.Component {
     render = () => {
         return (
             <div>
-                <Card title="增加激活码可用竹子数(负数为减少)：" style={{padding: 20, margin: 20}}>
+                <Card title="编辑激活码竹子数目：" style={{padding: 20, margin: 20}}>
                     <Row>
-                        <Col span={4} offset={1}>
+                        <Col span={6} offset={1}>
                             <Input placeholder="激活码编号(注意删除空格)"  value={this.state.incKeyName} onChange={this.keyIncKeyNameChange}/>
                         </Col>
-                        <Col span={6} offset={1}>
+                        <Col span={8} offset={1}>
                             <span>增加的可用竹子数目（负数为减少）</span>
                             <InputNumber min={-10000000} max={10000000} defaultValue={1000} value={this.state.incCount}
                                          onChange={(event) => {this.keyIncCountChange(event)}}/>
